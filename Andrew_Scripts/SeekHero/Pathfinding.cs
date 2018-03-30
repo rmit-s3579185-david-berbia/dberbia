@@ -119,7 +119,7 @@ using _Scripts.SeekHero;
         private double GetEuclideanDistance(Node node, Node goal)
         {
             var dx = Mathf.Abs(node.Location.x - goal.Location.x);
-            var dy = Mathf.Abs(node.Location.z - goal.Location.z);
+            var dy = Mathf.Abs(node.Location.y - goal.Location.y);
             return 8 * (dx * dx + dy * dy);
         }
     
