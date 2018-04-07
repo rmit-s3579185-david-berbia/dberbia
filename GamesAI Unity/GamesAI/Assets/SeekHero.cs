@@ -22,6 +22,7 @@ namespace _Scripts.SeekHero
         private void Awake()
         {
             _pathfinding = gameObject.AddComponent<Pathfinding>();
+			_target = new GameObject ().transform;
 //            _grid = transform.parent.GetComponent<Grid>();
         }
 
@@ -33,6 +34,16 @@ namespace _Scripts.SeekHero
             _speed = speed;
             _pathfinding.StartGettingPath(seeker.transform.position, target.transform.position, _grid);
         }
+
+		public void Patrol(Transform seeker, float speed, Grid grid)
+		{
+			_target.position = new Vector3(seeker.transform.position.x + Random.Range(-10,10), seeker.transform.position.y,
+				seeker.transform.position.z + Random.Range(-10,10));
+			_seeker = seeker;
+			_grid = grid;
+			_speed = speed;
+			_pathfinding.StartGettingPath(seeker.transform.position, _target.transform.position, _grid);
+		}
 
         public void Stop()
         {
@@ -62,7 +73,7 @@ namespace _Scripts.SeekHero
         {
             if (_wayPoints.Count == 0)
             {
-                // Stop();
+                Stop();
                 return;
             }
 
@@ -73,6 +84,7 @@ namespace _Scripts.SeekHero
 
             // move towards the target
             _seeker.transform.position = Vector3.MoveTowards(_seeker.transform.position, _targetWaypoint, _speed * Time.deltaTime);
+			_seeker.transform.LookAt(_targetWaypoint);
 
             if (_seeker.transform.position == _targetWaypoint)
             {

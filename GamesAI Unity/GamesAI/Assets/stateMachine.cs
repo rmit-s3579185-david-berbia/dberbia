@@ -9,7 +9,7 @@ using _Scripts.SeekHero;
 
 public class stateMachine : MonoBehaviour {
 
-	public List<IEnumerator> stateList = new List<IEnumerator>();
+	public Dictionary<string, IEnumerator> stateList = new Dictionary<string, IEnumerator>();
 	public Transform Target;
 	public Transform Seeker;
 	public Transform Player;
@@ -27,21 +27,16 @@ public class stateMachine : MonoBehaviour {
 	{
 
 		//Add states to list of states here
-		stateList.Add(IdleState());
-		stateList.Add(TestState1());
-		stateList.Add(TestState2());
-		stateList.Add(TestState3());
-		stateList.Add(TestState4());
+		stateList.Add("Idle", IdleState());
+		stateList.Add("Patrol", Patrol());
 		
-		StartCoroutine(TimedStateSwitch());
-		// Go to default state
-		//StartCoroutine(StateHandler());
+		StateSwitch ("Idle");
 
 	}
 
-	private void StateSwitch(int state_ref)
+	private void StateSwitch(string state_ref)
 	{
-		StopCoroutine(stateList[state_ref]);
+		StopAllCoroutines ();
 		StartCoroutine(stateList[state_ref]);
 	}
 
@@ -61,41 +56,36 @@ public class stateMachine : MonoBehaviour {
 
 	private void Update()
 	{
-		if (!_seekHero.IsWalking) // && in LOS
-		{
-			_seekHero.IsWalking = true;
-			_seekHero.Seek(Seeker, Target, 8f, _grid);
-		}
-		
-	}
-
-	IEnumerator StateHandler()
-	{
-		while (true)
-		{
-			StartCoroutine(IdleState());
-			yield return new WaitForSeconds(1f);
-		}
-		
 		
 	}
 
 	IEnumerator IdleState()
 	{
 		_seekHero.Stop();
-		yield return null;
 		Debug.Log ("Idling");
+		yield return new WaitForSeconds(2f);
+		StateSwitch ("Patrol");
 	}
 
-	IEnumerator TestState1(){
-		yield return new WaitForSeconds(1f);
-		//yield return new WaitForSeconds (1f);
-		Debug.Log ("State 1");
+	IEnumerator Patrol(){
+		while (true) {
+			if (!_seekHero.IsWalking) { // && in LOS
+				_seekHero.IsWalking = true;
+				_seekHero.Patrol (Seeker, 8f, _grid);
+			}
+			yield return new WaitForSeconds (1f);
+			Debug.Log ("Patrolling");
+		}
 	}
 
-	IEnumerator TestState2(){
+	IEnumerator Pursue(){
+		if (!_seekHero.IsWalking) // && in LOS
+		{
+			_seekHero.IsWalking = true;
+			_seekHero.Seek(Seeker, Target, 8f, _grid);
+		}
 		yield return new WaitForSeconds (1f);
-		Debug.Log ("State 2");
+		Debug.Log ("Pursuing");
 	}
 
 	IEnumerator TestState3(){

@@ -6,9 +6,9 @@ public class DestroyOnCollission : MonoBehaviour {
 
 	void OnCollisionEnter (Collision col)
 	{
-		if(col.gameObject.name == "Enem")
+		if(col.gameObject.name == "Enemy")
 		{
-			Destroy(col.gameObject);
+			Destroy(gameObject);
 		}
 	}
 }
