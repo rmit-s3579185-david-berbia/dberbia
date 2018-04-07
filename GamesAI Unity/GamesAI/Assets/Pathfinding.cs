@@ -9,15 +9,19 @@ using _Scripts.SeekHero;
     
         private SeekHero _seekHero;
         private Grid _grid;
+        
+        // Layer Mask is referenecd as an Integer
+        private const int UnwalkableMask = 256;
     
         private void Awake()
         {
-            _grid = transform.parent.GetComponent<Grid>();
+            _grid = GetComponent<Grid>();
             _seekHero = GetComponent<SeekHero>();
         }
     
-        public void StartGettingPath(Vector3 startPos, Vector3 targetPos)
+        public void StartGettingPath(Vector3 startPos, Vector3 targetPos, Grid grid)
         {
+            _grid = grid;
             StartCoroutine(FindPath(startPos, targetPos));
         }
     
@@ -65,8 +69,7 @@ using _Scripts.SeekHero;
             }
             
             PrunePathAndReturn(startNode, targetNode); 
-			yield return new WaitForSeconds (1f);
-			FindPath (startPos, targetPos);
+			yield return null;
         }
 
         private void PrunePathAndReturn(Node startNode, Node targetNode)
@@ -102,7 +105,7 @@ using _Scripts.SeekHero;
                     var locationToCheck = new Vector3Int(xPos, yPos, node.Location.z);
                     var worldPoint = _grid.GetCellCenterWorld(locationToCheck);
                     
-                    var isValidMovement = !(Physics.CheckSphere(worldPoint, transform.lossyScale.x, _seekHero.UnwalkableMask));
+                    var isValidMovement = !Physics.CheckSphere(worldPoint, transform.lossyScale.x, UnwalkableMask);
     
                     if (isValidMovement)
                     {

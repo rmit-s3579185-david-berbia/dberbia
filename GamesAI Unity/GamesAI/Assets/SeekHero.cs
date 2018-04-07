@@ -3,45 +3,68 @@ using UnityEngine;
 
 namespace _Scripts.SeekHero
 {
-    public class SeekHero : MonoBehaviour {
+    public class SeekHero : MonoBehaviour
+    {
 
-        public Transform Target;
-        public LayerMask UnwalkableMask;
-        public float Speed;
+        private float _speed;
+        private Transform _seeker;
+        private Transform _target;
+
+        public bool IsWalking;
 
         private readonly Stack<Vector3> _wayPoints = new Stack<Vector3>();
 
         private Vector3 _targetWaypoint;
         private Pathfinding _pathfinding;
-        private Grid _grid; 
+        private Grid _grid;
+
 
         private void Awake()
         {
             _pathfinding = gameObject.AddComponent<Pathfinding>();
-            _grid = transform.parent.GetComponent<Grid>();
+//            _grid = transform.parent.GetComponent<Grid>();
         }
 
-        private void Start()
+        public void Seek(Transform seeker, Transform target, float speed, Grid grid)
         {
-            _pathfinding.StartGettingPath(transform.position, Target.transform.position);
+            _target = target;
+            _seeker = seeker;
+            _grid = grid;
+            _speed = speed;
+            _pathfinding.StartGettingPath(seeker.transform.position, target.transform.position, _grid);
+        }
+
+        public void Stop()
+        {
+            _wayPoints.Clear();
+            IsWalking = false;
         }
 
         public void FoundPath(IEnumerable<Vector3Int> path)
         {
+            _grid = transform.parent.GetComponent<Grid>();
             foreach (var waypoint in path)
             {
                 _wayPoints.Push(_grid.CellToWorld(waypoint));
             }
+
+            // Always need to pop the first off the stack as it includes where the Seeker was (so it travels backwards)
+            _wayPoints.Pop();
+
         }
 
-        // Update is called once per frame    
-        private void Update () {
-            Walk();
+        private void Update()
+        {
+            if (IsWalking) Walk();
         }
 
         private void Walk()
         {
-            if (_wayPoints.Count == 0) return;
+            if (_wayPoints.Count == 0)
+            {
+                // Stop();
+                return;
+            }
 
             if (_targetWaypoint == Vector3.zero)
             {
@@ -49,9 +72,9 @@ namespace _Scripts.SeekHero
             }
 
             // move towards the target
-            transform.position = Vector3.MoveTowards(transform.position, _targetWaypoint, Speed * Time.deltaTime);
+            _seeker.transform.position = Vector3.MoveTowards(_seeker.transform.position, _targetWaypoint, _speed * Time.deltaTime);
 
-            if (transform.position == _targetWaypoint)
+            if (_seeker.transform.position == _targetWaypoint)
             {
                 _targetWaypoint = _wayPoints.Pop();
             }
