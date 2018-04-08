@@ -109,6 +109,9 @@ public class stateMachine : MonoBehaviour {
 
 	IEnumerator Flee(){
 		while (Seeker.GetComponent<enemTrigger>().isFleeing) {
+			Transform desired_position = new GameObject ().transform;
+			desired_position.position = Vector3.Normalize(Seeker.position - Target.position) * 5;
+			_seekHero.Seek (Seeker, desired_position, 8f, _grid);
 			yield return new WaitForSeconds (0.1f);
 			Debug.Log ("Fleeing");
 		}
