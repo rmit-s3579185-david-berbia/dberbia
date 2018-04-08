@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\DestroyOnCollission.cs" />
+     <Compile Include="Assets\enemTrigger.cs" />
+     <Compile Include="Assets\innerEnamTrig.cs" />
      <Compile Include="Assets\Movement.cs" />
      <Compile Include="Assets\Pathfinding.cs" />
      <Compile Include="Assets\Priority Queue\FastPriorityQueue.cs" />

@@ -11,6 +11,7 @@ namespace _Scripts.SeekHero
         private Transform _target;
 
         public bool IsWalking;
+		public bool IsFleeing;
 
         private readonly Stack<Vector3> _wayPoints = new Stack<Vector3>();
 

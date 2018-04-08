@@ -30,6 +30,7 @@ public class stateMachine : MonoBehaviour {
 		stateList.Add("Idle", IdleState());
 		stateList.Add("Patrol", Patrol());
 		stateList.Add("Pursue", Pursue());
+		stateList.Add("Flee", Flee());
 		
 		StateSwitch ("Idle");
 
@@ -58,18 +59,21 @@ public class stateMachine : MonoBehaviour {
 	private void Update()
 	{
 		//Raycast as sight for seeker
-		RaycastHit hit;
-		if (Physics.Raycast (Seeker.position, Seeker.TransformDirection (Vector3.forward), out hit, Mathf.Infinity)) {
-			if (hit.collider.gameObject.tag == "Player") {
-				Debug.DrawRay (Seeker.position, Seeker.TransformDirection (Vector3.forward) * hit.distance, Color.green);
-				Debug.Log ("Did Hit");
-				StateSwitch ("Pursue");
+		if (!_seekHero.IsFleeing) {
+			RaycastHit hit;
+			if (Physics.Raycast (Seeker.position, Seeker.TransformDirection (Vector3.forward), out hit, Mathf.Infinity)) {
+				if (hit.collider.gameObject.tag == "Prey") {
+					Debug.DrawRay (Seeker.position, Seeker.TransformDirection (Vector3.forward) * hit.distance, Color.green);
+					//Debug.Log ("Did Hit");
+					StateSwitch ("Pursue");
+				}
+			} else {
+				Debug.DrawRay (Seeker.position, Seeker.TransformDirection (Vector3.forward) * 1000, Color.yellow);
+				//Debug.Log ("Did not Hit");
 			}
 		}
-		else
-		{
-			Debug.DrawRay(Seeker.position, Seeker.TransformDirection(Vector3.forward) * 1000, Color.yellow);
-			Debug.Log("Did not Hit");
+		if (Seeker.GetComponent<enemTrigger> ().isFleeing) {
+			StateSwitch ("Flee");
 		}
 	}
 
@@ -87,7 +91,7 @@ public class stateMachine : MonoBehaviour {
 				_seekHero.IsWalking = true;
 				_seekHero.Patrol (Seeker, 8f, _grid);
 			}
-			yield return new WaitForSeconds (1f);
+			yield return new WaitForSeconds (0.1f);
 			Debug.Log ("Patrolling");
 		}
 	}
@@ -98,14 +102,16 @@ public class stateMachine : MonoBehaviour {
 				_seekHero.IsWalking = true;
 				_seekHero.Seek (Seeker, Target, 8f, _grid);
 			}
-			yield return new WaitForSeconds (1f);
+			yield return new WaitForSeconds (0.1f);
 			Debug.Log ("Pursuing");
 		}
 	}
 
-	IEnumerator TestState3(){
-		yield return new WaitForSeconds (1f);
-		Debug.Log ("State 3");
+	IEnumerator Flee(){
+		while (Seeker.GetComponent<enemTrigger>().isFleeing) {
+			yield return new WaitForSeconds (0.1f);
+			Debug.Log ("Fleeing");
+		}
 	}
 
 	IEnumerator TestState4(){
