@@ -84,7 +84,8 @@ namespace _Scripts.SeekHero
 
             // move towards the target
             _seeker.transform.position = Vector3.MoveTowards(_seeker.transform.position, _targetWaypoint, _speed * Time.deltaTime);
-			_seeker.transform.LookAt(_targetWaypoint);
+			Vector3 lookDirection = _targetWaypoint - _seeker.transform.position;
+			_seeker.transform.rotation = Quaternion.RotateTowards(_seeker.transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * 150);
 
             if (_seeker.transform.position == _targetWaypoint)
             {

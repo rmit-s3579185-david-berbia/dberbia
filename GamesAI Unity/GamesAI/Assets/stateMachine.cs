@@ -29,6 +29,7 @@ public class stateMachine : MonoBehaviour {
 		//Add states to list of states here
 		stateList.Add("Idle", IdleState());
 		stateList.Add("Patrol", Patrol());
+		stateList.Add("Pursue", Pursue());
 		
 		StateSwitch ("Idle");
 
@@ -56,7 +57,20 @@ public class stateMachine : MonoBehaviour {
 
 	private void Update()
 	{
-		
+		//Raycast as sight for seeker
+		RaycastHit hit;
+		if (Physics.Raycast (Seeker.position, Seeker.TransformDirection (Vector3.forward), out hit, Mathf.Infinity)) {
+			if (hit.collider.gameObject.tag == "Player") {
+				Debug.DrawRay (Seeker.position, Seeker.TransformDirection (Vector3.forward) * hit.distance, Color.green);
+				Debug.Log ("Did Hit");
+				StateSwitch ("Pursue");
+			}
+		}
+		else
+		{
+			Debug.DrawRay(Seeker.position, Seeker.TransformDirection(Vector3.forward) * 1000, Color.yellow);
+			Debug.Log("Did not Hit");
+		}
 	}
 
 	IEnumerator IdleState()
@@ -79,13 +93,14 @@ public class stateMachine : MonoBehaviour {
 	}
 
 	IEnumerator Pursue(){
-		if (!_seekHero.IsWalking) // && in LOS
-		{
-			_seekHero.IsWalking = true;
-			_seekHero.Seek(Seeker, Target, 8f, _grid);
+		while (true) {
+			if (!_seekHero.IsWalking) { // && in LOS
+				_seekHero.IsWalking = true;
+				_seekHero.Seek (Seeker, Target, 8f, _grid);
+			}
+			yield return new WaitForSeconds (1f);
+			Debug.Log ("Pursuing");
 		}
-		yield return new WaitForSeconds (1f);
-		Debug.Log ("Pursuing");
 	}
 
 	IEnumerator TestState3(){
