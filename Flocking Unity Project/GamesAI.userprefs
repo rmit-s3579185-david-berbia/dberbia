@@ -1,0 +1,24 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\PreyMovement.cs">
+    <Files>
+      <File FileName="Assets\PreySight.cs" Line="1" Column="1" />
+      <File FileName="Assets\PreyMovement.cs" Line="69" Column="35" />
+      <File FileName="D:\Unity_Projects\BabyBust_Project - Copy\Assets\Scripts\BabyCon.cs" Line="1" Column="1" />
+      <File FileName="Assets\wp1.cs" Line="1" Column="1" />
+      <File FileName="Assets\wp2.cs" Line="1" Column="1" />
+      <File FileName="Assets\wp3.cs" Line="1" Column="1" />
+      <File FileName="Assets\wp4.cs" Line="1" Column="1" />
+      <File FileName="Assets\wp5.cs" Line="1" Column="1" />
+      <File FileName="D:\Unity_Projects\Game_AI_Semester1_2018\Assets\_Scripts\RatMovement.cs" Line="1" Column="1" />
+      <File FileName="Assets\Pathfinding.cs" Line="1" Column="1" />
+      <File FileName="Assets\FlockFinder.cs" Line="1" Column="1" />
+      <File FileName="Assets\FlockController.cs" Line="1" Column="1" />
+      <File FileName="Assets\CloneScript.cs" Line="43" Column="3" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
