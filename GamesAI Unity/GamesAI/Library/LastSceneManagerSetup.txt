@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scene.unity
+- path: C:/Users/qanob/Downloads/GamesAI 2/GamesAI/Assets/Scene.unity
   isLoaded: 1
   isActive: 1

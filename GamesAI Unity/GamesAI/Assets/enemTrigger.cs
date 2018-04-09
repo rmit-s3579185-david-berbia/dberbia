@@ -12,4 +12,10 @@ public class enemTrigger : MonoBehaviour {
 			isFleeing = true;
 		}
 	}
+
+	void OnTriggerExit(Collider col){
+		if (col.gameObject.tag == "Player") {
+			isFleeing = false;
+		}
+	}
 }

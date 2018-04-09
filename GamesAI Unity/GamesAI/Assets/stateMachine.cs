@@ -73,9 +73,9 @@ public class stateMachine : MonoBehaviour {
 				//Debug.Log ("Did not Hit");
 			}
 		}
-		/*if (Seeker.GetComponent<enemTrigger> ().isFleeing) {
+		if (Seeker.GetComponent<enemTrigger> ().isFleeing) {
 			StateSwitch ("Flee");
-		}*/
+		}
 	}
 
 	IEnumerator IdleState()
@@ -110,13 +110,13 @@ public class stateMachine : MonoBehaviour {
 
 	IEnumerator Flee(){
 		//Find a new position in the opposite direction to the player, and then find a path to there
-		while (Seeker.GetComponent<enemTrigger>().isFleeing) {
-			Transform desired_position = new GameObject ().transform;
-			desired_position.position = Vector3.Normalize(Seeker.position - Target.position) * 5;
-			_seekHero.Seek (Seeker, desired_position, 8f, _grid);
-			yield return new WaitForSeconds (0.1f);
-			Debug.Log ("Fleeing");
+		if (!_seekHero.IsWalking) { // && in LOS
+			_seekHero.IsWalking = true;
+			_seekHero.Flee (Seeker, Target, 8f, _grid);
 		}
+		yield return new WaitForSeconds (0.1f);
+		Debug.Log ("Fleeing");
+		StateSwitch ("Patrol");
 	}
 
 	IEnumerator TestState4(){

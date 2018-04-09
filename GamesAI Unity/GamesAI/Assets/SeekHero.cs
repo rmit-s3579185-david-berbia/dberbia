@@ -9,6 +9,7 @@ namespace _Scripts.SeekHero
         private float _speed;
         private Transform _seeker;
         private Transform _target;
+		private Transform desired_position;
 
         public bool IsWalking;
 		public bool IsFleeing;
@@ -24,6 +25,7 @@ namespace _Scripts.SeekHero
         {
             _pathfinding = gameObject.AddComponent<Pathfinding>();
 			_target = new GameObject ().transform;
+			desired_position = new GameObject ().transform;
 //            _grid = transform.parent.GetComponent<Grid>();
         }
 
@@ -35,6 +37,16 @@ namespace _Scripts.SeekHero
             _speed = speed;
             _pathfinding.StartGettingPath(seeker.transform.position, target.transform.position, _grid);
         }
+
+		public void Flee(Transform seeker, Transform target, float speed, Grid grid)
+		{
+			_target = target;
+			_seeker = seeker;
+			desired_position.position = Vector3.Normalize(seeker.position - target.position);
+			_grid = grid;
+			_speed = speed;
+			_pathfinding.StartGettingPath(seeker.transform.position, desired_position.position, _grid);
+		}
 
 		public void Patrol(Transform seeker, float speed, Grid grid)
 		{
@@ -86,8 +98,9 @@ namespace _Scripts.SeekHero
 
             // move towards the target
             _seeker.transform.position = Vector3.MoveTowards(_seeker.transform.position, _targetWaypoint, _speed * Time.deltaTime);
+			//Smooth turning so predator faces forward
 			Vector3 lookDirection = _targetWaypoint - _seeker.transform.position;
-			_seeker.transform.rotation = Quaternion.RotateTowards(_seeker.transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * 150);
+			//_seeker.transform.rotation = Quaternion.RotateTowards(_seeker.transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * 150);
 
             if (_seeker.transform.position == _targetWaypoint)
             {
