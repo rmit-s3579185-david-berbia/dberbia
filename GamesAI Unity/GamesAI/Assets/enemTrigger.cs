@@ -6,16 +6,7 @@ public class enemTrigger : MonoBehaviour {
 
 	public bool isFleeing;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
+	//When the player is within range, begin fleeing
 	void OnTriggerEnter(Collider col){
 		if (col.gameObject.tag == "Player") {
 			isFleeing = true;

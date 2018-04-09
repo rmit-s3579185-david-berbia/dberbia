@@ -38,9 +38,12 @@ using _Scripts.SeekHero;
             initialInfo.SetPath(path);
     
             var priorityQueue = new SimplePriorityQueue<TraversalInfo>();
+
+            var loopCount = 0;
+            var pathFound = false;
     
             priorityQueue.Enqueue(initialInfo, 0);
-            while (priorityQueue.Count > 0) {
+            while (priorityQueue.Count > 0 && loopCount < 200) {
                 var currentInfo = priorityQueue.Dequeue();
                 var currentNode = currentInfo.GetCurrentNode();
                 path = currentInfo.GetPath();
@@ -50,6 +53,7 @@ using _Scripts.SeekHero;
                 visited.Add(currentNode.Location);
                 if (currentNode.Location == targetNode.Location)
                 {
+                    pathFound = true;
                     targetNode.Parent = currentNode.Parent;
                     break;
                 }
@@ -66,9 +70,18 @@ using _Scripts.SeekHero;
                     var totalCost = tempPath.Count + (int)GetEuclideanDistance(successor, targetNode);
                     priorityQueue.Enqueue(ti, totalCost);
                 }
+
+                loopCount++;
             }
-            
-            PrunePathAndReturn(startNode, targetNode); 
+
+            if (pathFound)
+            {
+                PrunePathAndReturn(startNode, targetNode); 
+            }
+            else
+            {
+                _seekHero.IsWalking = false;
+            }
 			yield return null;
         }
 

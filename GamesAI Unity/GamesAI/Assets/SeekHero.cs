@@ -38,6 +38,7 @@ namespace _Scripts.SeekHero
 
 		public void Patrol(Transform seeker, float speed, Grid grid)
 		{
+			//Choosing a random point nearby and getting a path to there
 			_target.position = new Vector3(seeker.transform.position.x + Random.Range(-10,10), seeker.transform.position.y,
 				seeker.transform.position.z + Random.Range(-10,10));
 			_seeker = seeker;

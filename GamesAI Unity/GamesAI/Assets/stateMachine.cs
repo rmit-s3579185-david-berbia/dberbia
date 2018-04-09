@@ -38,6 +38,7 @@ public class stateMachine : MonoBehaviour {
 
 	private void StateSwitch(string state_ref)
 	{
+		//Stops all states and runs new state
 		StopAllCoroutines ();
 		StartCoroutine(stateList[state_ref]);
 	}
@@ -62,7 +63,7 @@ public class stateMachine : MonoBehaviour {
 		if (!_seekHero.IsFleeing) {
 			RaycastHit hit;
 			if (Physics.Raycast (Seeker.position, Seeker.TransformDirection (Vector3.forward), out hit, Mathf.Infinity)) {
-				if (hit.collider.gameObject.tag == "Prey") {
+				if (hit.collider.gameObject.tag == "Player") {
 					Debug.DrawRay (Seeker.position, Seeker.TransformDirection (Vector3.forward) * hit.distance, Color.green);
 					//Debug.Log ("Did Hit");
 					StateSwitch ("Pursue");
@@ -72,9 +73,9 @@ public class stateMachine : MonoBehaviour {
 				//Debug.Log ("Did not Hit");
 			}
 		}
-		if (Seeker.GetComponent<enemTrigger> ().isFleeing) {
+		/*if (Seeker.GetComponent<enemTrigger> ().isFleeing) {
 			StateSwitch ("Flee");
-		}
+		}*/
 	}
 
 	IEnumerator IdleState()
@@ -108,6 +109,7 @@ public class stateMachine : MonoBehaviour {
 	}
 
 	IEnumerator Flee(){
+		//Find a new position in the opposite direction to the player, and then find a path to there
 		while (Seeker.GetComponent<enemTrigger>().isFleeing) {
 			Transform desired_position = new GameObject ().transform;
 			desired_position.position = Vector3.Normalize(Seeker.position - Target.position) * 5;
